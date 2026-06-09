@@ -1,0 +1,18 @@
+export const GLOSSARY = {
+  BAU:  { full: 'Business as Usual',           def: 'No new policies beyond what exists today. The baseline against which all scenarios are compared.' },
+  MNR:  { full: 'Managing Natural Resources',  def: 'A pathway activating sustainable farming, agroforestry, renewable energy scale-up and moderate carbon pricing.' },
+  NZ:   { full: 'Net Zero 2070',               def: 'Deep decarbonisation by 2070 — hydrogen fuel-switching, CCS deployment and full renewable transition.' },
+  NDC:  { full: 'Nationally Determined Contribution', def: 'India\'s climate commitments under the Paris Agreement — 45% emission intensity reduction by 2030 vs 2005.' },
+  GEM:  { full: 'Green Economy Model',         def: 'A system-dynamics model developed by WRI India and KnowlEdge Srl to simulate India\'s economy, energy and land from 2025 to 2070.' },
+  LCD:  { full: 'Low-Carbon Development',      def: 'Development pathways that achieve economic growth while reducing greenhouse gas emissions.' },
+  TFP:  { full: 'Total Factor Productivity',   def: 'A measure of economic efficiency — how much output is produced per unit of inputs like labour and capital.' },
+  CCS:  { full: 'Carbon Capture and Storage',  def: 'Technology that captures CO₂ from industrial and energy sources and stores it underground.' },
+  SRI:  { full: 'System of Rice Intensification', def: 'A sustainable rice cultivation method that reduces water use and methane emissions.' },
+  RE:   { full: 'Renewable Energy',            def: 'Electricity generated from solar, wind, hydro and other non-fossil sources.' },
+  NMT:  { full: 'Non-Motorised Transport',     def: 'Walking, cycling and other human-powered transport — reduces petroleum demand.' },
+  LCU:  { full: 'Local Currency Unit',         def: 'A currency-neutral unit — here equivalent to Indian Rupees (₹).' },
+  'Gt CO₂e': { full: 'Gigatonne of CO₂ equivalent', def: 'One billion tonnes of greenhouse gases, expressed in terms of their CO₂ warming equivalent.' },
+  'EJ': { full: 'Exajoule',                    def: 'A unit of energy — 1 EJ = 10¹⁸ joules. India\'s total energy demand is approximately 30–40 EJ/year.' },
+  LULUCF: { full: 'Land Use, Land-Use Change and Forestry', def: 'The sector covering carbon absorbed or emitted by forests, agriculture and other land.' },
+  WBGT: { full: 'Wet Bulb Globe Temperature',  def: 'A heat stress index used to measure the impact of climate warming on outdoor labour productivity.' },
+}

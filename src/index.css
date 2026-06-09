@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, 'Segoe UI', Roboto, sans-serif; }
+#root { min-height: 100vh; display: flex; flex-direction: column; }
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High-contrast mode support */
+@media (prefers-contrast: more) {
+  .border-gray-100 { border-color: #6b7280 !important; }
+  .border-brand-100 { border-color: #0096A4 !important; }
+  .text-gray-400 { color: #374151 !important; }
+  .text-gray-500 { color: #1f2937 !important; }
+  .bg-surface { background-color: #ffffff !important; }
+}
