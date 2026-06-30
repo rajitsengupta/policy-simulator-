@@ -158,11 +158,11 @@ export default function ScenarioPanel() {
                   <div key={key} title={KPI_META[key].desc}>
                     <div className="flex items-baseline justify-between mb-0.5">
                       <span className="text-xs text-gray-500">{KPI_META[key].label}</span>
-                      <span className="text-base font-black" style={{ color: scenario.color }}>{val}</span>
+                      <span className="text-base font-black text-gray-500">{val}</span>
                     </div>
-                    <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-1 bg-gray-100 rounded-full overflow-hidden">
                       <div className="h-full rounded-full transition-all duration-500"
-                        style={{ width: `${pct}%`, background: scenario.color }} />
+                        style={{ width: `${pct}%`, background: '#9E9E9E' }} />
                     </div>
                   </div>
                 )

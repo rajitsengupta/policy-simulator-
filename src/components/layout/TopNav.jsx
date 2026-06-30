@@ -9,7 +9,7 @@ import LoginModal from '../shared/LoginModal'
 
 export default function TopNav() {
   const location = useLocation()
-  const { values, modifiedCount } = useSliderStore()
+  const { values } = useSliderStore()
   const [toast, setToast] = useState(false)
   const [showLogin, setShowLogin] = useState(false)
   const [user, setUser] = useState(null)
@@ -34,7 +34,7 @@ export default function TopNav() {
   }
 
   function restartTour() {
-    localStorage.removeItem('onboarding-v2')
+    localStorage.removeItem('onboarding-v3')
     window.location.reload()
   }
 
@@ -45,7 +45,6 @@ export default function TopNav() {
 
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group flex-shrink-0">
-            <IndiaFlag size={38} />
             <div className="hidden sm:block">
               <p className="font-bold text-sm text-green-700 leading-tight group-hover:text-green-800 transition-colors">
                 India Green Economy Model
@@ -80,12 +79,6 @@ export default function TopNav() {
 
           {/* Right actions */}
           <div className="flex items-center gap-1.5 flex-shrink-0">
-            {modifiedCount > 0 && (
-              <span className="hidden md:inline bg-amber-100 text-amber-700 border border-amber-200 text-xs px-2 py-0.5 rounded-full font-semibold">
-                {modifiedCount} lever{modifiedCount > 1 ? 's' : ''} modified
-              </span>
-            )}
-
             <button onClick={restartTour}
               aria-label="Restart guided tour"
               title="User Guide"

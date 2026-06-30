@@ -13,21 +13,6 @@ import DataTable from '../shared/DataTable'
 
 const SCENARIO_KEYS = ['BAU', 'MNR', 'NZ']
 
-// Custom dot shapes for accessibility (colour + shape encoding)
-const DOT_SHAPES = {
-  BAU: (props) => {
-    const { cx, cy, fill } = props
-    return <circle cx={cx} cy={cy} r={3} fill={fill} stroke="#fff" strokeWidth={1} />
-  },
-  MNR: (props) => {
-    const { cx, cy, fill } = props
-    return <rect x={cx - 3} y={cy - 3} width={6} height={6} fill={fill} stroke="#fff" strokeWidth={1} />
-  },
-  NZ: (props) => {
-    const { cx, cy, fill } = props
-    return <polygon points={`${cx},${cy - 4} ${cx + 3.5},${cy + 2} ${cx - 3.5},${cy + 2}`} fill={fill} stroke="#fff" strokeWidth={1} />
-  },
-}
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null
@@ -36,8 +21,9 @@ const CustomTooltip = ({ active, payload, label }) => {
       <p className="font-bold text-gray-800 mb-2">{label}</p>
       {payload.map(p => (
         <div key={p.dataKey} className="flex justify-between gap-4 mb-0.5">
-          <span style={{ color: p.color }} className="font-medium flex items-center gap-1">
-            {p.name === 'BAU' ? '●' : p.name === 'MNR' ? '■' : '▲'} {p.name}
+          <span style={{ color: p.color }} className="font-medium flex items-center gap-1.5">
+            <span style={{ display:'inline-block', width:12, height:2, background: p.color, borderRadius:1 }} />
+            {SCENARIOS[p.name]?.label ?? p.name}
           </span>
           <span className="font-bold text-gray-900 tabular-nums">
             {typeof p.value === 'number' ? p.value.toFixed(3) : p.value}
@@ -113,15 +99,16 @@ function GraphChart({ graph, sliderValues, activeScenario, animate, visible, tog
         <Area dataKey="lowerBound" stroke="none" fill="#ffffff" fillOpacity={1} isAnimationActive={false} legendType="none" />
         {SCENARIO_KEYS.map(s => (
           <Line key={s} dataKey={s} stroke={SCENARIOS[s].color}
-            strokeWidth={visible[s] ? (s === activeScenario ? 2.5 : 1.5) : 1}
-            strokeOpacity={visible[s] ? (s === activeScenario ? 1 : 0.65) : 0.12}
-            strokeDasharray={s === 'BAU' ? '5 3' : s === 'NZ' ? '2 2' : undefined}
-            dot={visible[s] ? DOT_SHAPES[s] : false}
-            activeDot={visible[s] ? { r: 5, strokeWidth: 2, stroke: '#fff' } : false}
+            strokeWidth={visible[s] ? (s === activeScenario ? 3 : 2) : 1}
+            strokeOpacity={visible[s] ? 1 : 0.1}
+            strokeDasharray={undefined}
+            dot={false}
+            activeDot={visible[s] ? { r: 4, strokeWidth: 2, stroke: '#fff', fill: SCENARIOS[s].color } : false}
             name={s} isAnimationActive={animate && s === activeScenario && visible[s]}
           />
         ))}
         <Legend
+          iconType="none"
           wrapperStyle={{ fontSize: 11, paddingTop: 10, cursor: 'pointer' }}
           onClick={({ dataKey }) => {
             if (!dataKey || !SCENARIOS[dataKey]) return
@@ -141,7 +128,8 @@ function GraphChart({ graph, sliderValues, activeScenario, animate, visible, tog
               }}
                 title={`${hidden ? 'Show' : 'Hide'} ${SCENARIOS[v]?.label}`}
               >
-                {v === 'BAU' ? '● ' : v === 'MNR' ? '■ ' : '▲ '}{SCENARIOS[v]?.label ?? v}
+                <span style={{ display:'inline-block', width:12, height:2, background: hidden ? '#9ca3af' : SCENARIOS[v]?.color, borderRadius:1, marginRight:4, verticalAlign:'middle' }} />
+                {SCENARIOS[v]?.label ?? v}
               </span>
             )
           }}
@@ -258,7 +246,6 @@ export default function FeaturedGraph({ graph, sliderValues, activeScenario, ani
               {graph.subtitle && <p className="text-sm text-gray-500 mb-1">{graph.subtitle}</p>}
               <p className="text-xs text-gray-400 mb-4">{graph.unit}</p>
               <div className="flex gap-2 mb-2 flex-wrap">{controls}</div>
-              <DeltaBadge graph={graph} chartData={chartData} visible={visible} />
               <div className="mt-3">
                 {showTable
                   ? <DataTable graph={graph} chartData={chartData} visibleScenarios={visible} />

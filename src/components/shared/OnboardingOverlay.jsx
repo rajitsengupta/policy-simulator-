@@ -33,11 +33,14 @@ export default function OnboardingOverlay() {
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
-    if (!localStorage.getItem('onboarding-v2')) setVisible(true)
+    if (!localStorage.getItem('onboarding-v3')) {
+      const t = setTimeout(() => setVisible(true), 400)
+      return () => clearTimeout(t)
+    }
   }, [])
 
   function dismiss() {
-    localStorage.setItem('onboarding-v2', '1')
+    localStorage.setItem('onboarding-v3', '1')
     setVisible(false)
   }
 

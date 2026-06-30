@@ -28,12 +28,9 @@ export default function LoginModal({ onClose, onLogin }) {
 
         <div className="p-8">
           {/* Logo */}
-          <div className="flex items-center gap-3 mb-6">
-            <IndiaFlag size={36} />
-            <div>
-              <p className="text-sm font-bold text-brand-700 leading-tight">India Green Economy Model</p>
-              <p className="text-xs text-gray-400">GEM-India Dashboard</p>
-            </div>
+          <div className="mb-6">
+            <p className="text-sm font-bold text-brand-700 leading-tight">India Green Economy Model</p>
+            <p className="text-xs text-gray-400">GEM-India Dashboard</p>
           </div>
 
           <h2 className="text-lg font-bold text-gray-900 mb-1">Sign in</h2>

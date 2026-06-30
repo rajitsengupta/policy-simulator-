@@ -9,16 +9,19 @@ const WHY_IT_MATTERS = [
   { icon: TrendingUp,  color: 'bg-purple-50 text-purple-700',title: 'Growth & investment',   body: 'Is a low-carbon transition compatible with 7%+ GDP growth? Where should public investment go to maximise co-benefits?' },
 ]
 
-const SCENARIOS = [
-  { key: 'BAU', label: 'Business as Usual', color: '#546e7a', bg: 'bg-slate-50 border-slate-200',
-    desc: 'No new policies beyond what exists today. The baseline against which everything else is measured.',
-    co2: '7.7 Gt', gdp: '6.4%', re: '30%' },
-  { key: 'MNR', label: 'Managing Natural Resources', color: '#1565c0', bg: 'bg-blue-50 border-blue-200',
-    desc: 'Sustainable farming, agroforestry, renewable scale-up and moderate carbon pricing — a pragmatic middle path.',
-    co2: '0.04 Gt', gdp: '6.7%', re: '92%' },
-  { key: 'NZ',  label: 'Net Zero 2070', color: '#2e7d32', bg: 'bg-green-50 border-green-200',
-    desc: 'Deep decarbonisation across all sectors — hydrogen, CCS, full renewable transition and land restoration.',
-    co2: '0.97 Gt', gdp: '6.2%', re: '92%' },
+const MODELS = [
+  { key: 'GEM', label: 'GEM-India', color: '#1565c0', bg: 'bg-blue-50 border-blue-200',
+    desc: 'System-dynamics model capturing feedback loops between energy, economy, land and health.',
+    co2: '0.97 Gt', gdp: '6.2%', energy: '1,840 Mtoe', re: '1,850 GW' },
+  { key: 'EPS', label: 'Energy Policy Simulator', color: '#2e7d32', bg: 'bg-green-50 border-green-200',
+    desc: 'Policy-lever focused simulation of India\'s energy system developed by Energy Innovation.',
+    co2: '1.20 Gt', gdp: '6.5%', energy: '1,920 Mtoe', re: '1,640 GW' },
+  { key: 'IESS', label: 'India Energy Security Scenarios', color: '#6a1b9a', bg: 'bg-purple-50 border-purple-200',
+    desc: 'NITI Aayog\'s scenario tool exploring India\'s energy mix and security out to 2047.',
+    co2: '2.10 Gt', gdp: '6.8%', energy: '2,210 Mtoe', re: '1,380 GW' },
+  { key: 'SAFARI', label: 'SAFARI', color: '#e65100', bg: 'bg-orange-50 border-orange-200',
+    desc: 'Sector-level assessment framework for ambitious and resilient India energy transitions.',
+    co2: '1.55 Gt', gdp: '6.3%', energy: '2,050 Mtoe', re: '1,520 GW' },
 ]
 
 export default function LandingPage() {
@@ -32,12 +35,9 @@ export default function LandingPage() {
         <div className="absolute inset-0 opacity-[0.06]"
           style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '36px 36px' }} />
         <div className="relative max-w-5xl mx-auto px-6 py-20 md:py-28">
-          <div className="flex items-center gap-3 mb-6">
-            <IndiaFlag size={48} />
-            <div>
-              <p className="font-black text-lg leading-tight">India Green Economy Model</p>
-              <p className="text-blue-200 text-sm">GEM-India · WRI India & KnowlEdge Srl · v2.0</p>
-            </div>
+          <div className="mb-6">
+            <p className="font-black text-lg leading-tight">India Green Economy Model</p>
+            <p className="text-blue-200 text-sm">GEM-India · WRI India & KnowlEdge Srl · v2.0</p>
           </div>
           <h1 className="text-4xl md:text-5xl font-black leading-tight mb-5 max-w-3xl">
             What does a low-carbon India look like — for people?
@@ -97,25 +97,25 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Three scenarios ── */}
+      {/* ── Model comparison ── */}
       <section className="bg-surface px-6 py-16">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-10">
-            <p className="text-xs text-brand-500 font-black uppercase tracking-widest mb-2">Three pathways</p>
-            <h2 className="text-2xl font-black text-gray-900">What happens under each policy choice?</h2>
-            <p className="text-sm text-gray-500 mt-2">All graphs show all three lines. Toggle any on or off.</p>
+            <p className="text-xs text-brand-500 font-black uppercase tracking-widest mb-2">Model comparison</p>
+            <h2 className="text-2xl font-black text-gray-900">How do different models compare?</h2>
+            <p className="text-sm text-gray-500 mt-2">Same parameters, four models — see where projections align and diverge.</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {SCENARIOS.map(s => (
-              <div key={s.key} className={`rounded-2xl border-2 p-5 ${s.bg}`}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {MODELS.map(m => (
+              <div key={m.key} className={`rounded-2xl border-2 p-5 ${m.bg}`}>
                 <div className="flex items-center gap-2 mb-3">
-                  <div className="w-3 h-3 rounded-full" style={{ background: s.color }} />
-                  <span className="text-xs font-black uppercase tracking-wider" style={{ color: s.color }}>{s.key}</span>
+                  <div className="w-3 h-3 rounded-full" style={{ background: m.color }} />
+                  <span className="text-xs font-black uppercase tracking-wider" style={{ color: m.color }}>{m.key}</span>
                 </div>
-                <h3 className="font-bold text-gray-900 text-sm mb-2">{s.label}</h3>
-                <p className="text-xs text-gray-600 mb-4 leading-relaxed">{s.desc}</p>
-                <div className="grid grid-cols-3 gap-2">
-                  {[['CO₂e 2070', s.co2], ['GDP growth', s.gdp], ['RE share 2070', s.re]].map(([l, v]) => (
+                <h3 className="font-bold text-gray-900 text-sm mb-2">{m.label}</h3>
+                <p className="text-xs text-gray-600 mb-4 leading-relaxed">{m.desc}</p>
+                <div className="grid grid-cols-2 gap-2">
+                  {[['Total CO₂e', m.co2], ['GDP growth', m.gdp], ['Final energy', m.energy], ['RE capacity', m.re]].map(([l, v]) => (
                     <div key={l} className="bg-white/70 rounded-xl px-2 py-2 text-center">
                       <p className="font-bold text-sm text-gray-900">{v}</p>
                       <p className="text-xs text-gray-500 leading-tight">{l}</p>
@@ -188,8 +188,7 @@ export default function LandingPage() {
       <section className="bg-brand-700 text-white px-6 py-12">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-start justify-between gap-8">
           <div>
-            <div className="flex items-center gap-3 mb-3">
-              <IndiaFlag size={36} />
+            <div className="mb-3">
               <p className="font-black text-base">India Green Economy Model</p>
             </div>
             <p className="text-xs text-blue-300 max-w-sm leading-relaxed mb-2">

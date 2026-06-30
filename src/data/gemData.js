@@ -111,9 +111,38 @@ export const REAL_DATA = {
 
 // Graphs without real model data — use calibrated synthetic curves
 export const SYNTHETIC_GRAPHS = new Set([
-  'employment_agri', 'employment_services', 'employment_industry',
-  'unemployment', 'employment_re',
+  // Economic — GDP
+  'gdp_total', 'gdp_agriculture', 'gdp_industry', 'gdp_services',
+  'gdp_share_agri', 'gdp_share_industry', 'gdp_share_services',
+  // Employment
+  'employment_agri', 'employment_agri_rel', 'employment_services', 'employment_industry',
+  'employment_total', 'unemployment', 'employment_re',
+  'employment_fossil', 'employment_nonfossil', 'employment_elec',
+  'employment_re_other', 'employment_agri_sust', 'employment_labor_energy',
+  'green_jobs_share', 'green_jobs_additional',
+  // Investment & income
+  'nominal_investment', 'nominal_investment_gdp', 'private_savings', 'income_labour',
+  // Productivity & cost
+  'tfp_industry', 'tfp_services', 'cumulative_scc', 'lc_cost',
+  // Environmental — sectoral emissions
+  'co2_industry', 'co2_livestock', 'co2_soils', 'co2_waste', 'co2_land', 'co2_proxy',
   'livestock_emissions', 'energy_share_emissions',
-  'govt_budget', 'public_debt', 'dev_expenditure',
+  'land_share_emissions', 'waste_share_emissions', 'soils_share_emissions', 'ippu_share_emissions',
+  // Energy demand by fuel
+  'energy_demand_biofuel', 'energy_demand_gas', 'energy_demand_coal',
+  'energy_demand_elec', 'energy_demand_petro', 'energy_demand_sector',
+  // Power generation
+  'power_capacity_total', 'elec_gen_shares', 'capacity_installed', 'nonfossil_share', 'other_re_share',
+  'co2_energy_sector', 'carbon_intensity_energy',
+  // Public finance
+  'govt_budget', 'govt_revenue', 'govt_expenditure', 'govt_investment',
+  'public_debt', 'dev_expenditure', 'non_dev_expenditure',
+  // Social & demographic
   'healthcare', 'schooling', 'pop_served',
+  'birth_rate', 'death_rate', 'life_expectancy',
+  // Land-use
+  'land_agriculture', 'land_urban', 'land_fallow',
+  'land_culturable_waste', 'land_unculturable_waste',
+  'land_bioethanol', 'sustainable_cropland', 'sustainable_agri_prod',
+  'organic_agri_share', 'fertilizer_rel', 'fertilizer_organic', 'bioethanol_ha',
 ])

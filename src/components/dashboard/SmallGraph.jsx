@@ -13,11 +13,6 @@ import DataTable from '../shared/DataTable'
 const SCENARIO_KEYS = ['BAU', 'MNR', 'NZ']
 const CHART_TYPES = ['grouped-bar', 'stacked-bar', 'multi-line']
 
-const DOT_SHAPES = {
-  BAU: p => <circle cx={p.cx} cy={p.cy} r={2.5} fill={p.fill} stroke="#fff" strokeWidth={1} />,
-  MNR: p => <rect x={p.cx - 2.5} y={p.cy - 2.5} width={5} height={5} fill={p.fill} stroke="#fff" strokeWidth={1} />,
-  NZ:  p => <polygon points={`${p.cx},${p.cy - 3.5} ${p.cx + 3},${p.cy + 2} ${p.cx - 3},${p.cy + 2}`} fill={p.fill} stroke="#fff" strokeWidth={1} />,
-}
 
 const miniTip = {
   contentStyle: { fontSize: 10, borderRadius: 6, padding: '4px 8px', border: '1px solid #e5e7eb' },
@@ -111,9 +106,9 @@ export default function SmallGraph({ graph, sliderValues, activeScenario, animat
                   fillOpacity={visible[s] ? 0.75 : 0.10}
                   radius={[2, 2, 0, 0]} maxBarSize={10} name={s} isAnimationActive={animate && s === activeScenario} />
               ))}
-              <Legend wrapperStyle={{ fontSize: 9, paddingTop: 4, cursor: 'pointer' }}
+              <Legend iconType="none" wrapperStyle={{ fontSize: 9, paddingTop: 4, cursor: 'pointer' }}
                 onClick={({ dataKey }) => { if (SCENARIOS[dataKey]) toggle(dataKey) }}
-                formatter={v => <span style={{ color: visible[v] ? SCENARIOS[v]?.color : '#d1d5db', fontWeight: 600, textDecoration: visible[v] ? 'none' : 'line-through', userSelect: 'none' }}>{v}</span>} />
+                formatter={v => <span style={{ color: visible[v] ? SCENARIOS[v]?.color : '#d1d5db', fontWeight: 700, textDecoration: visible[v] ? 'none' : 'line-through', userSelect: 'none' }}>{v}</span>} />
             </ComposedChart>
           </ResponsiveContainer>
         )}
@@ -121,12 +116,12 @@ export default function SmallGraph({ graph, sliderValues, activeScenario, animat
           <ResponsiveContainer width="100%" height={height}>
             <ComposedChart data={chartData} margin={{ top: 2, right: 3, left: -8, bottom: 2 }}>
               {grid}{xAxis}{yAxis}<Tooltip {...miniTip} />
-              {visible.BAU && <Bar dataKey="BAU" fill={SCENARIOS.BAU.color} fillOpacity={0.55} radius={[0,0,0,0]} maxBarSize={18} stackId="a" isAnimationActive={animate} />}
-              {visible.MNR && <Bar dataKey="MNR" fill={SCENARIOS.MNR.color} fillOpacity={0.75} radius={[2,2,0,0]} maxBarSize={18} isAnimationActive={animate} />}
-              {visible.NZ  && <Line dataKey="NZ" stroke={SCENARIOS.NZ.color} strokeWidth={2} dot={DOT_SHAPES.NZ} strokeDasharray="2 2" isAnimationActive={animate} />}
-              <Legend wrapperStyle={{ fontSize: 9, paddingTop: 4, cursor: 'pointer' }}
+              {visible.BAU && <Bar dataKey="BAU" fill={SCENARIOS.BAU.color} fillOpacity={0.6} radius={[0,0,0,0]} maxBarSize={18} stackId="a" isAnimationActive={animate} />}
+              {visible.MNR && <Bar dataKey="MNR" fill={SCENARIOS.MNR.color} fillOpacity={0.85} radius={[2,2,0,0]} maxBarSize={18} isAnimationActive={animate} />}
+              {visible.NZ  && <Line dataKey="NZ" stroke={SCENARIOS.NZ.color} strokeWidth={2} dot={false} isAnimationActive={animate} />}
+              <Legend iconType="none" wrapperStyle={{ fontSize: 9, paddingTop: 4, cursor: 'pointer' }}
                 onClick={({ dataKey }) => { if (SCENARIOS[dataKey]) toggle(dataKey) }}
-                formatter={v => <span style={{ color: visible[v] ? SCENARIOS[v]?.color : '#d1d5db', fontWeight: 600, textDecoration: visible[v] ? 'none' : 'line-through', userSelect: 'none' }}>{v}</span>} />
+                formatter={v => <span style={{ color: visible[v] ? SCENARIOS[v]?.color : '#d1d5db', fontWeight: 700, textDecoration: visible[v] ? 'none' : 'line-through', userSelect: 'none' }}>{v}</span>} />
             </ComposedChart>
           </ResponsiveContainer>
         )}
@@ -138,14 +133,15 @@ export default function SmallGraph({ graph, sliderValues, activeScenario, animat
                 <Line key={s} dataKey={s} stroke={SCENARIOS[s].color}
                   strokeWidth={visible[s] ? (s === activeScenario ? 2.5 : 1.5) : 0.8}
                   strokeOpacity={visible[s] ? (s === activeScenario ? 1 : 0.6) : 0.12}
-                  strokeDasharray={s === 'BAU' ? '4 2' : s === 'NZ' ? '2 2' : undefined}
-                  dot={visible[s] ? DOT_SHAPES[s] : false}
-                  activeDot={visible[s] ? { r: 3 } : false}
+                  strokeDasharray={undefined}
+                  strokeWidth={visible[s] ? (s === activeScenario ? 2.5 : 1.8) : 0.5}
+                  dot={false}
+                  activeDot={visible[s] ? { r: 3, fill: SCENARIOS[s].color } : false}
                   name={s} isAnimationActive={animate && s === activeScenario && visible[s]} />
               ))}
-              <Legend wrapperStyle={{ fontSize: 9, paddingTop: 4, cursor: 'pointer' }}
+              <Legend iconType="none" wrapperStyle={{ fontSize: 9, paddingTop: 4, cursor: 'pointer' }}
                 onClick={({ dataKey }) => { if (SCENARIOS[dataKey]) toggle(dataKey) }}
-                formatter={v => <span style={{ color: visible[v] ? SCENARIOS[v]?.color : '#d1d5db', fontWeight: 600, textDecoration: visible[v] ? 'none' : 'line-through', userSelect: 'none' }}>{v}</span>} />
+                formatter={v => <span style={{ color: visible[v] ? SCENARIOS[v]?.color : '#d1d5db', fontWeight: 700, textDecoration: visible[v] ? 'none' : 'line-through', userSelect: 'none' }}>{v}</span>} />
             </ComposedChart>
           </ResponsiveContainer>
         )}
@@ -220,22 +216,6 @@ export default function SmallGraph({ graph, sliderValues, activeScenario, animat
               <h2 className="text-lg font-bold text-gray-900 mb-0.5">{graph.name}</h2>
               {graph.subtitle && <p className="text-sm text-gray-500 mb-0.5">{graph.subtitle}</p>}
               <p className="text-xs text-gray-400 mb-4">{graph.unit}</p>
-              <div className="flex gap-2 mb-3 flex-wrap">
-                {SCENARIO_KEYS.map(s => (
-                  <button key={s} onClick={() => toggle(s)}
-                    aria-pressed={visible[s]}
-                    className={`text-xs px-3 py-1.5 rounded-full border font-semibold transition-all ${
-                      visible[s] ? 'text-white border-transparent' : 'bg-white border-gray-200 text-gray-400'}`}
-                    style={visible[s] ? { background: SCENARIOS[s].color } : {}}>
-                    {s === 'BAU' ? '● ' : s === 'MNR' ? '■ ' : '▲ '}{SCENARIOS[s].label}
-                  </button>
-                ))}
-                <button onClick={() => setShowTable(!showTable)} aria-pressed={showTable}
-                  className={`text-xs px-3 py-1.5 rounded-full border font-semibold transition-all ${
-                    showTable ? 'bg-brand-50 border-brand-200 text-brand-700' : 'border-gray-200 text-gray-500'}`}>
-                  {showTable ? 'Chart' : 'Table'}
-                </button>
-              </div>
               {showTable
                 ? <DataTable graph={graph} chartData={chartData} visibleScenarios={visible} />
                 : <MiniChart height={380} />}

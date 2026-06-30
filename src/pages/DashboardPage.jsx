@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ChevronLeft, ChevronRight, ChevronUp, ChevronDown, PanelBottom, PanelLeft, Search, X } from 'lucide-react'
 import GraphSection from '../components/dashboard/GraphSection'
 import ScenarioPanel from '../components/dashboard/ScenarioPanel'
@@ -91,6 +91,17 @@ export default function DashboardPage() {
   const [bottomOpen, setBottomOpen] = useState(true)
   const BOTTOM_H = 280
 
+  // Auto-open sidebar briefly on first visit to hint at "Create your scenario"
+  useEffect(() => {
+    if (localStorage.getItem('sidebar-hinted')) return
+    const openTimer  = setTimeout(() => setSidebarOpen(true),  800)
+    const closeTimer = setTimeout(() => {
+      setSidebarOpen(false)
+      localStorage.setItem('sidebar-hinted', '1')
+    }, 3200)
+    return () => { clearTimeout(openTimer); clearTimeout(closeTimer) }
+  }, [])
+
   return (
     <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
       <OnboardingOverlay />
@@ -153,7 +164,7 @@ export default function DashboardPage() {
           {/* Centre — graphs */}
           <main className="flex-1 overflow-y-auto bg-surface min-w-0">
             <div className="flex gap-3 items-start p-4">
-              <GraphSection activeCategory={activeCategory} />
+              <GraphSection activeCategory={activeCategory} setActiveCategory={setActiveCategory} />
 
               {/* Right — scenario panel */}
               <div className={`flex-shrink-0 flex flex-col transition-all duration-300 ${rightOpen ? 'w-56' : 'w-10'}`}>

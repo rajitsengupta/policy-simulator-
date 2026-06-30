@@ -1,86 +1,185 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowLeft, ExternalLink, BookOpen } from 'lucide-react'
+import { ArrowLeft, BookOpen } from 'lucide-react'
 import { GROUPS } from '../data/sliders'
 
-const DATA_SOURCES = [
+function AvailBadge({ val }) {
+  const map = {
+    Yes:       'bg-green-100 text-green-700',
+    Partially: 'bg-amber-100 text-amber-700',
+    No:        'bg-red-100 text-red-500',
+  }
+  return (
+    <span className={`inline-block px-2 py-0.5 rounded-full font-medium text-xs ${map[val] ?? 'bg-gray-100 text-gray-500'}`}>
+      {val}
+    </span>
+  )
+}
+
+const DATA_SOURCES_TABLE = [
   {
-    name: 'IPCC (Intergovernmental Panel on Climate Change)',
-    color: 'border-blue-200 bg-blue-50',
-    titleColor: 'text-blue-700',
-    url: 'https://www.ipcc.ch',
-    desc: 'Climate science assessments, emission scenarios, and climate change projections',
-    datasets: [
-      'AR6 Climate Change 2021: The Physical Science Basis',
-      'AR6 Climate Change 2022: Impacts, Adaptation and Vulnerability',
-      'Special Report on Global Warming of 1.5°C',
-      'Emission Factor Database',
+    sector: 'Macroeconomy',
+    color: 'bg-blue-50',
+    headerColor: 'bg-blue-100 text-blue-800',
+    rows: [
+      { variable: 'System of National Accounts', available: 'Yes', national: 'Yes', sources: 'Data.gov.in · Agriculture Statistics, 2019 · Economic Survey, 2019–20 · MoSPI · IMF' },
+      { variable: 'Investments', available: 'Yes', national: 'No', sources: 'World Bank' },
+      { variable: 'Private final consumption', available: 'Yes', national: 'Yes', sources: 'MoSPI' },
+      { variable: 'Government spending', available: 'Yes', national: 'Partially', sources: 'MoSPI · World Development Indicators' },
+      { variable: 'Net value added', available: 'Partially', national: 'Yes', sources: 'Data.gov.in' },
+      { variable: 'Gross value added', available: 'Yes', national: 'Yes', sources: 'Directorate of Economic and Statistics' },
+      { variable: 'Taxes and revenue', available: 'Yes', national: 'Yes', sources: 'World Bank' },
+      { variable: 'Trade', available: 'Yes', national: 'No', sources: 'IMF' },
     ],
   },
   {
-    name: 'IEA (International Energy Agency)',
-    color: 'border-amber-200 bg-amber-50',
-    titleColor: 'text-amber-700',
-    url: 'https://www.iea.org',
-    desc: 'Energy statistics, technology data, and energy transition pathways',
-    datasets: [
-      'World Energy Outlook 2023',
-      'India Energy Outlook 2021',
-      'Net Zero by 2050 Roadmap',
-      'Global EV Outlook',
-      'Renewable Energy Market Update',
+    sector: 'Agriculture',
+    color: 'bg-green-50',
+    headerColor: 'bg-green-100 text-green-800',
+    rows: [
+      { variable: 'Agriculture and livestock value added', available: 'Yes', national: 'Yes', sources: 'MoSPI' },
+      { variable: 'Area and area under irrigation for principal crops', available: 'Yes', national: 'Yes', sources: 'Land-Use Statistics, Ministry of Agriculture and Farmers Welfare' },
+      { variable: 'Fallow land, culturable and unculturable wasteland', available: 'Yes', national: 'Yes', sources: 'Land-Use Statistics, Ministry of Agriculture and Farmers Welfare' },
+      { variable: 'Agriculture yield of principal crops', available: 'Yes', national: 'Yes', sources: 'Ministry of Agriculture and Farmers Welfare, "Agricultural Statistics at a Glance"' },
+      { variable: 'Livestock population', available: 'Yes', national: 'Yes', sources: 'Basic Animal Husbandry Statistics, Ministry of Fisheries, Animal Husbandry and Dairying' },
+      { variable: 'Adoption rate of sustainable agriculture practices', available: 'Yes', national: 'No', sources: 'Council on Energy, Environment and Water, "Sustainable Agriculture in India 2021"' },
+      { variable: 'Chemical fertiliser use, nitrogen content in manure and manure treatment', available: 'Yes', national: 'No', sources: 'FAOSTAT' },
     ],
   },
   {
-    name: 'World Bank',
-    color: 'border-teal-200 bg-teal-50',
-    titleColor: 'text-teal-700',
-    url: 'https://www.worldbank.org',
-    desc: 'Economic indicators, development data, and climate finance information',
-    datasets: [
-      'World Development Indicators',
-      'GDP Growth Projections',
-      'Climate Change Knowledge Portal',
-      'Carbon Pricing Dashboard',
+    sector: 'Education',
+    color: 'bg-purple-50',
+    headerColor: 'bg-purple-100 text-purple-800',
+    rows: [
+      { variable: 'Gross enrolment ratio (at various levels)', available: 'Yes', national: 'Partially', sources: 'Ministry of Education · World Bank' },
+      { variable: 'Literacy rate (15+ years) disaggregated by age and gender', available: 'Yes', national: 'No', sources: 'World Bank' },
+      { variable: 'Illiterate population (15+ years) disaggregated by age and gender', available: 'Yes', national: 'No', sources: 'World Bank' },
+      { variable: 'Gross intake ratio (at various levels)', available: 'Yes', national: 'Partially', sources: 'Ministry of Education' },
+      { variable: 'Graduation / survival rate (at various levels)', available: 'Yes', national: 'Partially', sources: 'Ministry of Education' },
+      { variable: 'Number of educational institutions', available: 'Yes', national: 'Partially', sources: 'Ministry of Education' },
+      { variable: 'Gender parity index', available: 'Yes', national: 'Partially', sources: 'Ministry of Education' },
+      { variable: 'Dropout rates', available: 'Yes', national: 'Partially', sources: 'Ministry of Education' },
     ],
   },
   {
-    name: 'Ministry of New & Renewable Energy (MNRE)',
-    color: 'border-green-200 bg-green-50',
-    titleColor: 'text-green-700',
-    url: 'https://mnre.gov.in',
-    desc: 'India-specific renewable energy targets, capacity data and policy documents',
-    datasets: [
-      'Annual Reports 2020–2024',
-      'National Solar Mission data',
-      'Wind Energy targets and installation data',
-      'PM-KUSUM scheme statistics',
+    sector: 'Forests',
+    color: 'bg-emerald-50',
+    headerColor: 'bg-emerald-100 text-emerald-800',
+    rows: [
+      { variable: 'Land under forests', available: 'Yes', national: 'Yes', sources: 'Land-Use Statistics, Ministry of Agriculture and Farmers Welfare' },
+      { variable: 'Estimates for tree and forest cover', available: 'Yes', national: 'Partially', sources: 'Forest Survey of India' },
+      { variable: 'Estimates for agroforestry', available: 'Yes', national: 'No', sources: 'S.K. Dhyani, A.K. Handa, and Uma, "Area under Agroforestry in India," Indian Journal of Agroforestry 15(1) (2013)' },
+      { variable: 'Economic contribution', available: 'Yes', national: 'Yes', sources: 'MoSPI' },
+      { variable: 'Import value', available: 'No', national: 'No', sources: 'FAO' },
+      { variable: 'Export value', available: 'No', national: 'Yes', sources: 'FAO' },
+      { variable: 'Production', available: 'No', national: 'Yes', sources: 'FAO' },
     ],
   },
   {
-    name: 'Ministry of Environment, Forest and Climate Change (MoEFCC)',
-    color: 'border-emerald-200 bg-emerald-50',
-    titleColor: 'text-emerald-700',
-    url: 'https://moef.gov.in',
-    desc: 'India\'s national GHG inventories, forest cover data, and NDC commitments',
-    datasets: [
-      'National GHG Inventory 2016',
-      'India\'s Updated NDC 2022',
-      'State of Forest Report 2021',
-      'National Action Plan on Climate Change (NAPCC)',
+    sector: 'Infrastructure',
+    color: 'bg-amber-50',
+    headerColor: 'bg-amber-100 text-amber-800',
+    rows: [
+      { variable: 'Road density', available: 'Yes', national: 'Yes', sources: 'Basic Road Statistics of India · Annual Reports, Ministry of Road, Transport and Highways' },
+      { variable: 'Road construction', available: 'No', national: 'No', sources: '—' },
+      { variable: 'Road-capital expenditure, O&M cost', available: 'Yes', national: 'Partially', sources: 'Basic Road Statistics of India · Annual Reports, Ministry of Road, Transport and Highways' },
+      { variable: 'Road infrastructure employment', available: 'Yes', national: 'Partially', sources: 'Annual Reports, Ministry of Road, Transport and Highways' },
+      { variable: 'Total number of registered vehicles', available: 'Yes', national: 'Yes', sources: 'Basic Road Statistics of India series · Annual Reports, Ministry of Road, Transport and Highways' },
+      { variable: 'Kilometres travelled disaggregated by vehicle type', available: 'No', national: 'No', sources: '—' },
+      { variable: 'Air pollution from transport by pollutant', available: 'No', national: 'No', sources: '—' },
+      { variable: 'Rail network', available: 'Yes', national: 'Yes', sources: 'Indian Rail Yearbook · Indian Rail Statistics' },
+      { variable: 'Rail energy consumption', available: 'Yes', national: 'Yes', sources: 'Indian Rail Yearbook · Indian Rail Statistics' },
     ],
   },
   {
-    name: 'Central Statistics Office (CSO) / MoSPI',
-    color: 'border-purple-200 bg-purple-50',
-    titleColor: 'text-purple-700',
-    url: 'https://mospi.gov.in',
-    desc: 'National accounts, employment and population data for India',
-    datasets: [
-      'National Accounts Statistics',
-      'Periodic Labour Force Survey (PLFS)',
-      'Consumer Price Index data',
-      'Population projections 2011–2036',
+    sector: 'Waste management',
+    color: 'bg-orange-50',
+    headerColor: 'bg-orange-100 text-orange-800',
+    rows: [
+      { variable: 'Waste generation per capita', available: 'No', national: 'No', sources: '—' },
+      { variable: 'Total waste generation', available: 'No', national: 'Yes', sources: 'Central Pollution Control Board, Solid Waste Management: Annual Report' },
+      { variable: 'Total waste collection', available: 'Yes', national: 'Partially', sources: 'Central Pollution Control Board, Solid Waste Management: Annual Report' },
+      { variable: 'Waste incineration', available: 'No', national: 'No', sources: '—' },
+      { variable: 'Waste landfilled', available: 'Yes', national: 'Partially', sources: 'Central Pollution Control Board, Solid Waste Management: Annual Report' },
+      { variable: 'Waste recycled', available: 'No', national: 'No', sources: '—' },
+      { variable: 'Waste recycling unit (registered and unregistered)', available: 'Yes', national: 'Partially', sources: 'Central Pollution Control Board, Plastic Waste Management: Annual Report' },
+      { variable: 'Waste composition', available: 'No', national: 'No', sources: '—' },
+      { variable: 'Employment', available: 'No', national: 'No', sources: '—' },
+      { variable: 'Emissions', available: 'No', national: 'No', sources: '—' },
+      { variable: 'Land requirement', available: 'No', national: 'No', sources: '—' },
+      { variable: 'Government efforts (taxation, investment)', available: 'No', national: 'No', sources: '—' },
+    ],
+  },
+  {
+    sector: 'Health',
+    color: 'bg-rose-50',
+    headerColor: 'bg-rose-100 text-rose-800',
+    rows: [
+      { variable: 'Number of health care professionals (doctors and nurses)', available: 'Yes', national: 'Partially', sources: 'Indian Statistical Yearbooks' },
+      { variable: 'Health infrastructure (hospitals and primary health centres)', available: 'Yes', national: 'Yes', sources: 'Indian Statistical Yearbooks' },
+    ],
+  },
+  {
+    sector: 'Water',
+    color: 'bg-cyan-50',
+    headerColor: 'bg-cyan-100 text-cyan-800',
+    rows: [
+      { variable: 'Residential water demand', available: 'No', national: 'No', sources: 'Social Statistics, Ministry of Statistics and Programme Implementation' },
+      { variable: 'Industrial water demand', available: 'No', national: 'No', sources: 'DMEO, NITI Aayog, Water Resources Sector Report' },
+    ],
+  },
+  {
+    sector: 'GHG emissions',
+    color: 'bg-red-50',
+    headerColor: 'bg-red-100 text-red-800',
+    rows: [
+      { variable: 'Total annual GHG emissions', available: 'Yes', national: 'Partially', sources: 'India Biennial Update Report' },
+    ],
+  },
+  {
+    sector: 'Labour and employment',
+    color: 'bg-indigo-50',
+    headerColor: 'bg-indigo-100 text-indigo-800',
+    rows: [
+      { variable: 'Labour force', available: 'Yes', national: 'Yes', sources: 'Labour Statistics' },
+      { variable: 'Total employment', available: 'Yes', national: 'Yes', sources: 'Labour Statistics · India Statistical Yearbook · Labour Bureau, Ministry of Labour and Employment' },
+      { variable: 'Employment in agriculture', available: 'Yes', national: 'Partially', sources: 'Labour Statistics · India Statistical Yearbook · Labour Bureau, Ministry of Labour and Employment' },
+      { variable: 'Employment in industry', available: 'Yes', national: 'Yes', sources: 'Labour Statistics · India Statistical Yearbook · Labour Bureau, Ministry of Labour and Employment' },
+      { variable: 'Employment in services', available: 'Yes', national: 'Partially', sources: 'Labour Statistics · India Statistical Yearbook · Labour Bureau, Ministry of Labour and Employment' },
+      { variable: 'Average earnings', available: 'Yes', national: 'Yes', sources: 'Labour Statistics · India Statistical Yearbook · Labour Bureau, Ministry of Labour and Employment' },
+    ],
+  },
+  {
+    sector: 'Industry',
+    color: 'bg-slate-50',
+    headerColor: 'bg-slate-100 text-slate-800',
+    rows: [
+      { variable: 'Initial GDP by industry', available: 'Yes', national: 'Yes', sources: 'Annual Survey of Industries · MoSPI' },
+      { variable: 'Investment industry by sector', available: 'Yes', national: 'Yes', sources: 'Annual Survey of Industries · MoSPI' },
+      { variable: 'Industrial wastewater generation', available: 'Yes', national: 'Partially', sources: 'Jal Shakti Ministry' },
+      { variable: 'Grossly polluting industries', available: 'Yes', national: 'Partially', sources: 'Jal Shakti Ministry' },
+    ],
+  },
+  {
+    sector: 'Energy',
+    color: 'bg-yellow-50',
+    headerColor: 'bg-yellow-100 text-yellow-800',
+    rows: [
+      { variable: 'Supply of electricity (by source, thermal and renewables)', available: 'Yes', national: 'Partially', sources: 'Energy Statistics, MoSPI' },
+      { variable: 'Total primary energy supply by source', available: 'Yes', national: 'Partially', sources: 'Energy Statistics, MoSPI' },
+      { variable: 'Production capacity of electricity by source', available: 'Yes', national: 'Partially', sources: 'Energy Statistics, MoSPI' },
+      { variable: 'Energy investment', available: 'Yes', national: 'Partially', sources: 'Annual Reports, Central Electricity Authority' },
+      { variable: 'Plant load factor', available: 'Yes', national: 'Partially', sources: 'Annual Reports, Ministry of Power' },
+      { variable: 'Total energy demand (by source)', available: 'Yes', national: 'Partially', sources: 'National Electricity Plan' },
+      { variable: 'Land required for biofuels', available: 'No', national: 'No', sources: 'Observer Research Foundation' },
+      { variable: 'Demand for petroleum products', available: 'No', national: 'No', sources: 'IEA Energy Demand Data' },
+      { variable: 'Total energy demand (sectors: residential, commercial, industrial, transport)', available: 'Yes', national: 'No', sources: 'Energy Statistics, MoSPI' },
+      { variable: 'Electricity final consumption by sector', available: 'Yes', national: 'Partially', sources: 'Energy Statistics, MoSPI' },
+      { variable: 'Energy prices and costs (disaggregated by consumer sector)', available: 'Yes', national: 'Partially', sources: 'Energy Statistics, MoSPI' },
+      { variable: 'Fossil fuel emissions', available: 'Yes', national: 'Partially', sources: 'Central Electricity Authority · India Biennial Update Report · GHG Platform India' },
+      { variable: 'Primary energy supply', available: 'Yes', national: 'Partially', sources: 'Energy Statistics, MoSPI' },
+      { variable: 'Employment', available: 'Yes', national: 'Partially', sources: 'Annual Reports, Ministry of Power' },
+      { variable: 'Final consumption data in KTOE', available: 'Yes', national: 'Partially', sources: 'Energy Statistics, MoSPI' },
     ],
   },
 ]
@@ -208,28 +307,57 @@ export default function MethodologyPage() {
 
         {/* ── Data Sources tab ── */}
         {tab === 'sources' && (
-          <div className="space-y-6">
-            <h2 className="text-base font-bold text-gray-900">Primary Data Sources</h2>
-            {DATA_SOURCES.map(src => (
-              <div key={src.name} className={`rounded-xl border-2 p-5 ${src.color}`}>
-                <div className="flex items-start justify-between gap-4 mb-2">
-                  <h3 className={`text-sm font-bold ${src.titleColor}`}>{src.name}</h3>
-                  <a href={src.url} target="_blank" rel="noopener noreferrer"
-                    className={`flex items-center gap-1 text-xs font-medium flex-shrink-0 ${src.titleColor} hover:underline`}>
-                    Visit <ExternalLink className="w-3 h-3" />
-                  </a>
+          <div className="space-y-3">
+            <div className="mb-4">
+              <h2 className="text-base font-bold text-gray-900">Sector-wise Datasets and Sources</h2>
+              <p className="text-xs text-gray-500 mt-1">Source: GEM-India Technical Note, October 2024 (WRI India &amp; KnowlEdge Srl). Table B-1.</p>
+            </div>
+
+            {/* Legend */}
+            <div className="flex flex-wrap gap-4 mb-4 text-xs text-gray-600">
+              <span className="font-semibold text-gray-700">Data available:</span>
+              <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-green-500 inline-block" /> Yes</span>
+              <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-amber-400 inline-block" /> Partially</span>
+              <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-red-400 inline-block" /> No</span>
+            </div>
+
+            {DATA_SOURCES_TABLE.map(section => (
+              <div key={section.sector} className="rounded-xl border border-gray-200 overflow-hidden">
+                <div className={`px-4 py-2.5 ${section.headerColor} font-bold text-sm`}>
+                  {section.sector}
                 </div>
-                <p className="text-xs text-gray-600 mb-3">{src.desc}</p>
-                <p className="text-xs font-semibold text-gray-500 mb-1">Key Datasets Used:</p>
-                <ul className="space-y-0.5">
-                  {src.datasets.map(d => (
-                    <li key={d} className="text-xs text-gray-600 flex items-start gap-1.5">
-                      <span className="mt-1 flex-shrink-0">•</span> {d}
-                    </li>
-                  ))}
-                </ul>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-xs">
+                    <thead>
+                      <tr className="bg-gray-50 border-b border-gray-100">
+                        <th className="text-left px-4 py-2 font-semibold text-gray-500 w-[35%]">Variable</th>
+                        <th className="text-center px-3 py-2 font-semibold text-gray-500 w-[12%]">Data available</th>
+                        <th className="text-center px-3 py-2 font-semibold text-gray-500 w-[12%]">National sources</th>
+                        <th className="text-left px-4 py-2 font-semibold text-gray-500">Data sources</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-50">
+                      {section.rows.map((row, i) => (
+                        <tr key={i} className="hover:bg-gray-50 transition-colors">
+                          <td className="px-4 py-2.5 text-gray-700 leading-snug">{row.variable}</td>
+                          <td className="px-3 py-2.5 text-center">
+                            <AvailBadge val={row.available} />
+                          </td>
+                          <td className="px-3 py-2.5 text-center">
+                            <AvailBadge val={row.national} />
+                          </td>
+                          <td className="px-4 py-2.5 text-gray-500 leading-snug">{row.sources}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             ))}
+
+            <p className="text-xs text-gray-400 pt-2">
+              Abbreviations: DMEO = Development Monitoring and Evaluation Office · FAO = Food and Agriculture Organization · FAOSTAT = FAO Corporate Statistical Database · IEA = International Energy Agency · IMF = International Monetary Fund · KTOE = kilotonnes of oil equivalent · MoSPI = Ministry of Statistics and Programme Implementation · NITI = National Institution for Transforming India · O&amp;M = operations and maintenance.
+            </p>
           </div>
         )}
 
